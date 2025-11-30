@@ -33,7 +33,7 @@ namespace payroll.Repository
                 .ToArray())
                 .ToUpper();
 
-            string random = new Random().Next(0, 99999).ToString("D5");
+            string random = new Random().Next(0, 1000).ToString("D5");
 
             string dobFormatted = dob
                 .ToDateTime(TimeOnly.MinValue)
