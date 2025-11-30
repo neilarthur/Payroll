@@ -1,0 +1,100 @@
+
+<!--- CREATE -!>
+
+CREATE PROCEDURE sp_create_employee
+    @EmployeeNumber NVARCHAR(50),
+    @EmployeeName NVARCHAR(150),
+    @DateOfBirth DATE,
+    @DailyRate DECIMAL(18,2),
+    @WorkingDays NVARCHAR(50)
+AS
+BEGIN
+    SET NOCOUNT ON;
+    INSERT INTO Employees
+    (
+        EmployeeNumber,
+        EmployeeName,
+        DateOfBirth,
+        DailyRate,
+        WorkingDays
+    )
+    VALUES
+    (
+        @EmployeeNumber,
+        @EmployeeName,
+        @DateOfBirth,
+        @DailyRate,
+        @WorkingDays
+    );
+
+    SELECT SCOPE_IDENTITY() AS Id;
+END;
+
+
+
+<!--- GET ALL -!>
+CREATE PROCEDURE sp_get_all_employees
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT 
+        Id,
+        EmployeeNumber,
+        EmployeeName,
+        DateOfBirth,
+        DailyRate,
+        WorkingDays
+    FROM Employees
+    ORDER BY Id DESC; -- optional (newest first)
+END;
+
+
+
+<!--- UPFATE -!>
+
+CREATE PROCEDURE sp_update_employee
+    @Id INT,
+    @EmployeeNumber NVARCHAR(50),
+    @EmployeeName NVARCHAR(150),
+    @DateOfBirth DATE,
+    @DailyRate DECIMAL(18,2),
+    @WorkingDays NVARCHAR(50)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    UPDATE Employees
+    SET
+        EmployeeNumber = @EmployeeNumber,
+        EmployeeName = @EmployeeName,
+        DateOfBirth = @DateOfBirth,
+        DailyRate = @DailyRate,
+        WorkingDays = @WorkingDays
+    WHERE Id = @Id;
+
+    SELECT @@ROWCOUNT AS RowsAffected;
+END;
+
+
+
+<!--- DELETE -!>
+
+CREATE PROCEDURE sp_DeleteEmployee
+    @EmployeeId INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    IF NOT EXISTS (SELECT 1 FROM Employees WHERE Id = @EmployeeId)
+    BEGIN
+        SELECT 0 AS Result;  
+        RETURN;
+    END
+
+
+    DELETE FROM Employees
+    WHERE Id = @EmployeeId;
+
+    SELECT 1 AS Result;  
+END
